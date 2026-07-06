@@ -1,0 +1,321 @@
+<!DOCTYPE html>
+<html lang="zh-Hant" data-theme="dark">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>台股選股儀表板</title>
+<style>
+:root[data-theme="dark"]{
+  --bg:#0d1117; --surface:#161b22; --surface2:#1c2430; --border:#30363d;
+  --text:#e6edf3; --muted:#9aa4b2; --link:#79b8ff;
+  --up:#ff7b72; --down:#3fb950;
+  --hot:#f0883e; --hot-bg:rgba(240,136,62,.13); --hot-border:rgba(240,136,62,.55);
+  --cross:#f2cc60; --cross-bg:rgba(210,153,34,.16); --cross-border:rgba(210,153,34,.6);
+  --chip-bg:#21262d; --shadow:0 1px 8px rgba(0,0,0,.4);
+}
+:root[data-theme="light"]{
+  --bg:#f6f8fa; --surface:#ffffff; --surface2:#f0f3f6; --border:#d0d7de;
+  --text:#1f2328; --muted:#59636e; --link:#0969da;
+  --up:#d1242f; --down:#1a7f37;
+  --hot:#bc4c00; --hot-bg:rgba(188,76,0,.08); --hot-border:rgba(188,76,0,.45);
+  --cross:#9a6700; --cross-bg:rgba(212,167,44,.15); --cross-border:rgba(154,103,0,.5);
+  --chip-bg:#eff2f5; --shadow:0 1px 6px rgba(31,35,40,.08);
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html{-webkit-text-size-adjust:100%}
+body{
+  background:var(--bg); color:var(--text);
+  font-family:-apple-system,BlinkMacSystemFont,"PingFang TC","Noto Sans TC","Microsoft JhengHei",sans-serif;
+  font-size:16px; line-height:1.6; min-height:100dvh;
+}
+a{color:var(--link);text-decoration:none}
+a:hover{text-decoration:underline}
+.wrap{max-width:1080px;margin:0 auto;padding:16px 16px 64px}
+header.top{display:flex;align-items:center;gap:12px;flex-wrap:wrap;padding:8px 0 4px}
+header.top h1{font-size:1.35rem;font-weight:700;letter-spacing:.02em}
+.updated{color:var(--muted);font-size:.85rem}
+.spacer{flex:1}
+button{font-family:inherit;cursor:pointer}
+.btn{
+  display:inline-flex;align-items:center;gap:6px;min-height:44px;padding:8px 14px;
+  background:var(--surface);border:1px solid var(--border);border-radius:10px;
+  color:var(--text);font-size:.9rem;transition:background .2s,border-color .2s;
+}
+.btn:hover{border-color:var(--muted)}
+.btn:focus-visible,.chip:focus-visible,a:focus-visible{outline:2px solid var(--link);outline-offset:2px}
+section{margin-top:28px}
+h2{font-size:1.05rem;font-weight:700;display:flex;align-items:center;gap:8px;margin-bottom:4px}
+h2 .cnt{color:var(--muted);font-weight:400;font-size:.85rem}
+.hint{color:var(--muted);font-size:.8rem;margin-bottom:12px}
+.legend{display:flex;gap:14px;flex-wrap:wrap;color:var(--muted);font-size:.8rem;margin:6px 0 12px}
+.legend span{display:inline-flex;align-items:center;gap:5px}
+.dot{width:10px;height:10px;border-radius:50%;display:inline-block}
+.dot.hot{background:var(--hot);box-shadow:0 0 6px var(--hot)}
+.dot.cross{background:var(--cross)}
+/* 族群 chips */
+.chips{display:flex;flex-wrap:wrap;gap:10px}
+.chip{
+  display:inline-flex;align-items:center;gap:7px;min-height:44px;padding:8px 14px;
+  background:var(--chip-bg);border:1px solid var(--border);border-radius:999px;
+  font-size:.95rem;color:var(--text);
+}
+.chip .n{font-weight:600}
+.chip .c{font-size:.8rem;color:var(--muted);background:var(--surface);border:1px solid var(--border);border-radius:999px;padding:0 8px;line-height:1.5}
+.chip.hot{background:var(--hot-bg);border-color:var(--hot-border);box-shadow:0 0 10px var(--hot-bg)}
+.chip.hot .flame{color:var(--hot)}
+.chip.hot .tag{font-size:.75rem;color:var(--hot);font-weight:700;letter-spacing:.05em}
+.chip.cross{background:var(--cross-bg);border-color:var(--cross-border)}
+.chip.hot.cross{background:linear-gradient(100deg,var(--hot-bg),var(--cross-bg));border-color:var(--cross-border)}
+.chip.cross .ydot{width:9px;height:9px;border-radius:50%;background:var(--cross)}
+/* 精選卡片 */
+.stockgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(310px,1fr));gap:12px}
+.scard{background:var(--surface);border:1px solid var(--border);border-radius:14px;padding:14px 16px;box-shadow:var(--shadow)}
+.scard .row1{display:flex;align-items:baseline;gap:8px;flex-wrap:wrap}
+.scard .code{font-weight:700;font-size:1.05rem;font-variant-numeric:tabular-nums}
+.scard .name{font-weight:700;font-size:1.05rem}
+.scard .mkt{color:var(--muted);font-size:.78rem}
+.badge{font-size:.72rem;font-weight:700;padding:2px 8px;border-radius:6px;letter-spacing:.05em}
+.badge.notice{background:rgba(210,153,34,.18);color:var(--cross);border:1px solid var(--cross-border)}
+.badge.punish{background:rgba(248,81,73,.15);color:var(--up);border:1px solid rgba(248,81,73,.4)}
+.badge.hit{background:var(--chip-bg);color:var(--muted);border:1px solid var(--border);font-weight:500}
+.badge.exempt{background:var(--hot-bg);color:var(--hot);border:1px solid var(--hot-border)}
+.scard .nums{display:flex;gap:18px;margin:8px 0 4px;font-variant-numeric:tabular-nums}
+.scard .nums .lb{color:var(--muted);font-size:.75rem;display:block}
+.scard .nums .v{font-size:1.02rem;font-weight:600}
+.scard .detail{color:var(--muted);font-size:.8rem;margin-top:2px}
+.scard .newslinks{margin-top:8px;font-size:.85rem;border-top:1px dashed var(--border);padding-top:8px}
+.scard .newslinks a{display:block;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;padding:3px 0}
+.scard .secchips{margin-top:6px;display:flex;gap:6px;flex-wrap:wrap}
+.scard .secchips .mini{font-size:.75rem;padding:1px 8px;border-radius:999px;background:var(--chip-bg);border:1px solid var(--border);color:var(--muted)}
+.scard .secchips .mini.hot{color:var(--hot);border-color:var(--hot-border);background:var(--hot-bg)}
+/* 新聞卡片 */
+.toolbar{display:flex;gap:8px;align-items:center;flex-wrap:wrap;margin-bottom:12px}
+.newsgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(330px,1fr));gap:12px}
+.ncard{background:var(--surface);border:1px solid var(--border);border-radius:14px;padding:14px 16px;box-shadow:var(--shadow);display:flex;flex-direction:column;gap:8px}
+.ncard.fired{border-color:var(--hot-border);background:linear-gradient(180deg,var(--hot-bg),var(--surface) 55%)}
+.ncard .meta{display:flex;align-items:center;gap:8px;color:var(--muted);font-size:.78rem}
+.ncard h3{font-size:.98rem;font-weight:600;line-height:1.5}
+.ncard h3 a{color:var(--text)}
+.ncard .desc{color:var(--muted);font-size:.83rem;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+.ncard .foot{display:flex;align-items:flex-end;gap:6px;flex-wrap:wrap;margin-top:auto}
+.ncard .mini{font-size:.75rem;padding:1px 8px;border-radius:999px;background:var(--chip-bg);border:1px solid var(--border);color:var(--muted)}
+.ncard .mini.sec{color:var(--text)}
+.ncard .mini.sec.hot{color:var(--hot);border-color:var(--hot-border);background:var(--hot-bg)}
+.ncard .mini.sec.cross{color:var(--cross);border-color:var(--cross-border);background:var(--cross-bg)}
+.ncard .mini.stk{font-variant-numeric:tabular-nums}
+.firebtn{
+  margin-left:auto;min-width:44px;min-height:36px;border-radius:10px;border:1px solid var(--border);
+  background:var(--chip-bg);color:var(--muted);font-size:.9rem;transition:transform .15s;
+}
+.firebtn:active{transform:scale(.94)}
+.firebtn.on{color:var(--hot);border-color:var(--hot-border);background:var(--hot-bg)}
+/* EBC 與剔除 摺疊區 */
+details{background:var(--surface);border:1px solid var(--border);border-radius:14px;overflow:hidden}
+details summary{
+  cursor:pointer;list-style:none;display:flex;align-items:center;gap:8px;
+  padding:14px 16px;font-weight:700;min-height:48px;user-select:none;
+}
+details summary::-webkit-details-marker{display:none}
+details summary .cnt{color:var(--muted);font-weight:400;font-size:.85rem}
+details summary .arrow{margin-left:auto;transition:transform .2s;color:var(--muted)}
+details[open] summary .arrow{transform:rotate(180deg)}
+details .inner{padding:0 16px 14px;border-top:1px solid var(--border)}
+.ebcitem{display:flex;gap:10px;padding:10px 0;border-bottom:1px dashed var(--border);font-size:.88rem;align-items:baseline;flex-wrap:wrap}
+.ebcitem:last-child{border-bottom:none}
+.ebcitem .ts{color:var(--muted);font-variant-numeric:tabular-nums;font-size:.78rem;flex:0 0 auto}
+.ebcitem .lb{font-size:.72rem;padding:1px 7px;border-radius:6px;background:var(--chip-bg);border:1px solid var(--border);color:var(--muted);flex:0 0 auto}
+.ebcitem .tx{flex:1 1 240px}
+.ebcitem .q{font-variant-numeric:tabular-nums;font-size:.8rem}
+.pct-up{color:var(--up);font-weight:600}
+.pct-down{color:var(--down);font-weight:600}
+.droprow{display:flex;gap:10px;padding:8px 0;border-bottom:1px dashed var(--border);font-size:.85rem;flex-wrap:wrap;align-items:baseline}
+.droprow:last-child{border-bottom:none}
+.droprow .why{color:var(--muted);font-size:.78rem;margin-left:auto}
+.empty{color:var(--muted);padding:20px;text-align:center;background:var(--surface);border:1px dashed var(--border);border-radius:14px}
+footer{margin-top:40px;color:var(--muted);font-size:.75rem;line-height:1.8}
+@media (max-width:480px){
+  .wrap{padding:12px 12px 56px}
+  .newsgrid,.stockgrid{grid-template-columns:1fr}
+}
+@media (prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important}}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header class="top">
+    <h1>台股選股儀表板</h1>
+    <span class="updated" id="updated"></span>
+    <span class="spacer"></span>
+    <button class="btn" id="themeBtn" aria-label="切換深淺色主題">
+      <svg id="iconMoon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
+      <svg id="iconSun" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display:none"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="4"/><line x1="12" y1="20" x2="12" y2="23"/><line x1="4.2" y1="4.2" x2="6.3" y2="6.3"/><line x1="17.7" y1="17.7" x2="19.8" y2="19.8"/><line x1="1" y1="12" x2="4" y2="12"/><line x1="20" y1="12" x2="23" y2="12"/><line x1="4.2" y1="19.8" x2="6.3" y2="17.7"/><line x1="17.7" y1="6.3" x2="19.8" y2="4.2"/></svg>
+      <span id="themeLabel">淺色</span>
+    </button>
+  </header>
+
+  <section id="secSectors">
+    <h2>族群溫度計 <span class="cnt" id="secCnt"></span></h2>
+    <div class="legend">
+      <span><span class="dot hot"></span>亮燈＝當日 3 則以上新聞點名（噴出）</span>
+      <span><span class="dot cross"></span>黃色＝與 EBC 參照源交叉重疊</span>
+    </div>
+    <div class="chips" id="sectorChips"></div>
+  </section>
+
+  <section id="secPicked">
+    <h2>精選名單 <span class="cnt" id="pickCnt"></span></h2>
+    <p class="hint">注意／處置股 ∩ 族群新聞命中，已剔除量 &lt; 1 萬張、價 &lt; 20 元（熱門族群豁免）。行情為最近交易日收盤。</p>
+    <div class="stockgrid" id="pickGrid"></div>
+  </section>
+
+  <section id="secNews">
+    <h2>熱門族群新聞 <span class="cnt" id="newsCnt"></span></h2>
+    <div class="toolbar">
+      <button class="btn" data-sort="new">新 → 舊</button>
+      <button class="btn" data-sort="old">舊 → 新</button>
+      <button class="btn" data-sort="fire">🔥 優先</button>
+    </div>
+    <div class="newsgrid" id="newsGrid"></div>
+  </section>
+
+  <section>
+    <details id="ebcBox">
+      <summary>EBC 參照源（盤中即時訊息）<span class="cnt" id="ebcCnt"></span>
+        <svg class="arrow" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><polyline points="6 9 12 15 18 9"/></svg>
+      </summary>
+      <div class="inner" id="ebcList"></div>
+    </details>
+  </section>
+
+  <section>
+    <details>
+      <summary>被剔除的注意／處置股 <span class="cnt" id="dropCnt"></span>
+        <svg class="arrow" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><polyline points="6 9 12 15 18 9"/></svg>
+      </summary>
+      <div class="inner" id="dropList"></div>
+    </details>
+  </section>
+
+  <footer>
+    資料來源：Yahoo 股市 RSS（熱門族群）、TWSE／TPEx 公開 API（注意股、處置股、每日行情）、EBC 新聞監測參照源。<br>
+    🔥 標記存在本機瀏覽器，不跨裝置同步。本頁為自動產生，僅供個人研究參考，非投資建議。
+  </footer>
+</div>
+
+<script src="data.js"></script>
+<script>
+
+const $ = s => document.querySelector(s);
+const esc = s => String(s ?? '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const hotSet = new Set(DATA.sectors.filter(s=>s.hot).map(s=>s.name));
+const crossSet = new Set(DATA.sectors.filter(s=>s.cross).map(s=>s.name));
+
+$('#updated').textContent = '更新：' + DATA.generated_at;
+
+/* ---- 主題 ---- */
+const root = document.documentElement;
+function applyTheme(t){
+  root.dataset.theme = t;
+  $('#iconMoon').style.display = t==='dark' ? '' : 'none';
+  $('#iconSun').style.display  = t==='dark' ? 'none' : '';
+  $('#themeLabel').textContent = t==='dark' ? '淺色' : '深色';
+  localStorage.setItem('dash-theme', t);
+}
+applyTheme(localStorage.getItem('dash-theme') || (matchMedia('(prefers-color-scheme: light)').matches ? 'light' : 'dark'));
+$('#themeBtn').onclick = () => applyTheme(root.dataset.theme==='dark' ? 'light' : 'dark');
+
+/* ---- 族群溫度計 ---- */
+$('#secCnt').textContent = DATA.sectors.length ? `今日命中 ${DATA.sectors.length} 個族群` : '';
+$('#sectorChips').innerHTML = DATA.sectors.map(s => `
+  <span class="chip ${s.hot?'hot':''} ${s.cross?'cross':''}" tabindex="0"
+        title="${esc(s.name)}：${s.count} 則新聞${s.cross?'，與 EBC 重疊':''}${s.hot?'，已亮燈':''}">
+    ${s.hot?'<svg class="flame" width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M12 23c-4.97 0-8-3.58-8-8 0-3.07 1.64-5.64 3.9-7.66C9.7 5.73 11 3.6 11 1c3 2 7 6.42 7 11 .74-.63 1.6-1.7 2-3 .66 1.5 1 3.36 1 5 0 4.42-4.03 9-9 9z"/></svg>':''}
+    ${s.cross&&!s.hot?'<span class="ydot"></span>':''}
+    <span class="n">${esc(s.name)}</span><span class="c">${s.count} 則</span>
+    ${s.hot?'<span class="tag">噴出</span>':''}
+  </span>`).join('') || '<div class="empty">今日新聞未命中任何族群關鍵字</div>';
+
+/* ---- 精選名單 ---- */
+$('#pickCnt').textContent = `${DATA.picked.length} 檔（原始 ${DATA.picked.length + DATA.dropped.length} 檔）`;
+function fmtVol(v){ return v==null?'—':v.toLocaleString('zh-Hant-TW'); }
+$('#pickGrid').innerHTML = DATA.picked.map(e => `
+  <div class="scard">
+    <div class="row1">
+      <a class="code" href="https://tw.stock.yahoo.com/quote/${esc(e.code)}" target="_blank" rel="noopener">${esc(e.code)}</a>
+      <span class="name">${esc(e.name)}</span>
+      <span class="mkt">${esc(e.market)}</span>
+      ${e.kinds.map(k=>`<span class="badge ${k==='處置'?'punish':'notice'}">${k}</span>`).join('')}
+      ${e.exempt?'<span class="badge exempt">熱門豁免</span>':''}
+    </div>
+    <div class="nums">
+      <span><span class="lb">收盤</span><span class="v">${e.close ?? '—'}</span></span>
+      <span><span class="lb">成交量（張）</span><span class="v">${fmtVol(e.vol)}</span></span>
+      <span><span class="lb">命中來源</span><span class="v" style="font-size:.85rem">${esc(e.hit||'—')}</span></span>
+    </div>
+    <div class="detail">${e.details.map(esc).join('；')}</div>
+    ${e.sectors.length?`<div class="secchips">${e.sectors.map(s=>`<span class="mini ${hotSet.has(s)?'hot':''}">${esc(s)}</span>`).join('')}</div>`:''}
+    ${e.news.length?`<div class="newslinks">${e.news.map(n=>`<a href="${esc(n.link)}" target="_blank" rel="noopener" title="${esc(n.title)}">↗ ${esc(n.title)}</a>`).join('')}</div>`:''}
+  </div>`).join('') || '<div class="empty">今日沒有股票通過篩選條件</div>';
+
+/* ---- 新聞卡片 ---- */
+const fires = new Set(JSON.parse(localStorage.getItem('dash-fires') || '[]'));
+let sortMode = 'new';
+function newsTime(n){ const d = new Date(n.pubDate); return isNaN(d) ? 0 : d.getTime(); }
+function fmtTime(n){
+  const d = new Date(n.pubDate);
+  return isNaN(d) ? '' : d.toLocaleString('zh-Hant-TW', {timeZone:'Asia/Taipei', month:'2-digit', day:'2-digit', hour:'2-digit', minute:'2-digit', hour12:false});
+}
+function renderNews(){
+  const list = [...DATA.news];
+  if (sortMode==='new') list.sort((a,b)=>newsTime(b)-newsTime(a));
+  if (sortMode==='old') list.sort((a,b)=>newsTime(a)-newsTime(b));
+  if (sortMode==='fire') list.sort((a,b)=>(fires.has(b.link)-fires.has(a.link)) || newsTime(b)-newsTime(a));
+  $('#newsCnt').textContent = `${list.length} 則`;
+  $('#newsGrid').innerHTML = list.map(n => `
+    <article class="ncard ${fires.has(n.link)?'fired':''}">
+      <div class="meta"><span>${fmtTime(n)}</span>
+        <button class="firebtn ${fires.has(n.link)?'on':''}" data-link="${esc(n.link)}" aria-label="標記重要新聞" aria-pressed="${fires.has(n.link)}">🔥</button>
+      </div>
+      <h3><a href="${esc(n.link)}" target="_blank" rel="noopener">${esc(n.title)}</a></h3>
+      ${n.desc?`<p class="desc">${esc(n.desc)}</p>`:''}
+      <div class="foot">
+        ${n.sectors.map(s=>`<span class="mini sec ${hotSet.has(s)?'hot':''} ${crossSet.has(s)?'cross':''}">${esc(s)}</span>`).join('')}
+        ${n.stocks.slice(0,6).map(c=>`<span class="mini stk">${esc(c)}</span>`).join('')}
+      </div>
+    </article>`).join('');
+  document.querySelectorAll('.firebtn').forEach(b => b.onclick = () => {
+    const k = b.dataset.link;
+    fires.has(k) ? fires.delete(k) : fires.add(k);
+    localStorage.setItem('dash-fires', JSON.stringify([...fires]));
+    renderNews();
+  });
+}
+document.querySelectorAll('[data-sort]').forEach(b => b.onclick = () => { sortMode = b.dataset.sort; renderNews(); });
+renderNews();
+
+/* ---- EBC 參照 ---- */
+$('#ebcCnt').textContent = `${DATA.ebc.length} 則`;
+$('#ebcList').innerHTML = DATA.ebc.map(r => `
+  <div class="ebcitem">
+    <span class="ts">${esc(r.ts||'')}</span>
+    ${r.label?`<span class="lb">${esc(r.label)}</span>`:''}
+    <span class="tx">${esc(r.text||'')}</span>
+    <span class="q">${(r.codes||[]).map(c=>{
+      const p = c.pct;
+      const cls = p>0?'pct-up':(p<0?'pct-down':'');
+      return `${esc(c.code)} ${esc(c.name)} <span class="${cls}">${p==null?'':(p>0?'+':'')+p+'%'}</span>`;
+    }).join('　')}</span>
+  </div>`).join('') || '<div class="empty">參照源今日無資料</div>';
+
+/* ---- 剔除清單 ---- */
+$('#dropCnt').textContent = `${DATA.dropped.length} 檔`;
+$('#dropList').innerHTML = DATA.dropped.map(e => `
+  <div class="droprow">
+    <span style="font-variant-numeric:tabular-nums;font-weight:600">${esc(e.code)}</span>
+    <span>${esc(e.name)}</span>
+    <span class="mkt" style="color:var(--muted);font-size:.78rem">${esc(e.market)}｜${e.kinds.join('＋')}</span>
+    <span class="why">${esc(e.drop_reason)}</span>
+  </div>`).join('');
+</script>
+</body>
+</html>
