@@ -19,19 +19,60 @@ def roc_to_iso(s):
     if not m: return None
     return f"{int(m.group(1))+1911}-{int(m.group(2)):02d}-{int(m.group(3)):02d}"
 
-# ---------- 1. Yahoo RSS 熱門族群新聞 ----------
-rss = fetch('https://tw.stock.yahoo.com/rss?q=%E7%86%B1%E9%96%80%E6%97%8F%E7%BE%A4')
-root = ET.fromstring(rss)
+# ---------- 1. Yahoo RSS 族群新聞（逐關鍵字查詢，非單查「熱門族群」） ----------
+from concurrent.futures import ThreadPoolExecutor
+from urllib.parse import quote
+from email.utils import parsedate_to_datetime
+
+SECTORS = ['軍工','無人機','矽光子','CPO','光通訊','記憶體','DRAM','HBM','AI伺服器','伺服器','散熱','液冷','重電','機器人',
+           'PCB','載板','玻璃基板','銅箔基板','CCL','被動元件','半導體','封測','IC設計','晶圓代工','面板','網通','電源',
+           '航運','貨櫃','散裝','航空','塑化','紡織','鋼鐵','水泥','生技','製藥','觀光','餐飲','營建','資產','金融','證券',
+           '電動車','汽車零組件','太陽能','儲能','風電','電池','低軌衛星','蘋概','綠能','遊戲','銅纜','高速傳輸','車用',
+           '矽智財','IP','先進封裝','CoWoS','ETF','東協','內需','醫材','隱形眼鏡','油價','原物料','航太','造船']
+
+def fetch_rss(kw):
+    try:
+        raw = fetch('https://tw.stock.yahoo.com/rss?q=' + quote(kw))
+        items = []
+        for item in ET.fromstring(raw).iter('item'):
+            items.append({
+                'title': (item.findtext('title') or '').strip(),
+                'link': (item.findtext('link') or '').strip(),
+                'pubDate': (item.findtext('pubDate') or '').strip(),
+                'desc': re.sub(r'<[^>]+>', '', item.findtext('description') or '').strip()[:200],
+                'q': kw,
+            })
+        return items
+    except Exception as e:
+        print('RSS 失敗:', kw, e)
+        return []
+
+news_by_link = {}
+with ThreadPoolExecutor(max_workers=8) as ex:
+    for items in ex.map(fetch_rss, ['熱門族群'] + SECTORS):
+        for it in items:
+            e = news_by_link.get(it['link'])
+            if e is None:
+                e = it
+                e['q_sectors'] = set()
+                news_by_link[it['link']] = e
+            if it['q'] in SECTORS:
+                e['q_sectors'].add(it['q'])
+
+cutoff = NOW - timedelta(days=3)
 news = []
-for item in root.iter('item'):
-    t = item.findtext('title') or ''
-    news.append({
-        'title': t.strip(),
-        'link': (item.findtext('link') or '').strip(),
-        'pubDate': (item.findtext('pubDate') or '').strip(),
-        'desc': re.sub(r'<[^>]+>', '', item.findtext('description') or '').strip()[:200],
-    })
-print('Yahoo RSS 新聞:', len(news))
+for e in news_by_link.values():
+    try:
+        dt = parsedate_to_datetime(e['pubDate'])
+        if dt.tzinfo is None:
+            dt = dt.replace(tzinfo=TPE)
+    except Exception:
+        dt = NOW
+    if dt >= cutoff:
+        e['_dt'] = dt
+        news.append(e)
+news.sort(key=lambda x: x['_dt'], reverse=True)
+print('Yahoo RSS 新聞（去重、3 天內）:', len(news))
 
 # ---------- 2. EBC 參照資料 ----------
 ebc = json.loads(fetch('https://pub-e13dde58e2134b369fa04c9c56ead9f5.r2.dev/data.json'))
@@ -107,12 +148,6 @@ for r in (((tpex_punish.get('tables') or [{}])[0]).get('data') or []):
 print('注意＋處置(原始):', len(watch))
 
 # ---------- 5. 族群關鍵字與比對 ----------
-SECTORS = ['軍工','無人機','矽光子','CPO','光通訊','記憶體','DRAM','HBM','AI伺服器','伺服器','散熱','液冷','重電','機器人',
-           'PCB','載板','玻璃基板','銅箔基板','CCL','被動元件','半導體','封測','IC設計','晶圓代工','面板','網通','電源',
-           '航運','貨櫃','散裝','航空','塑化','紡織','鋼鐵','水泥','生技','製藥','觀光','餐飲','營建','資產','金融','證券',
-           '電動車','汽車零組件','太陽能','儲能','風電','電池','低軌衛星','蘋概','綠能','遊戲','銅纜','高速傳輸','車用',
-           '矽智財','IP','先進封裝','CoWoS','ETF','東協','內需','醫材','隱形眼鏡','油價','原物料','航太','造船']
-
 def find_sectors(text):
     return [s for s in SECTORS if s in text]
 
@@ -125,7 +160,7 @@ def find_stocks(text):
 sector_count = {}
 for n in news:
     text = n['title'] + ' ' + n['desc']
-    n['sectors'] = find_sectors(text)
+    n['sectors'] = sorted(set(find_sectors(text)) | n.pop('q_sectors', set()))
     n['stocks'] = find_stocks(text)
     for s in n['sectors']:
         sector_count[s] = sector_count.get(s, 0) + 1
@@ -162,11 +197,15 @@ for code, e in watch.items():
     picked.append(e)
 print('精選:', len(picked), '｜剔除:', len(dropped))
 
+for n in news:
+    n.pop('_dt', None)
+    n.pop('q', None)
+
 OUT = {
     'generated_at': NOW.strftime('%Y-%m-%d %H:%M'),
     'quote_date': '前一交易日' ,
     'sectors': sectors_out,
-    'news': news,
+    'news': news[:200],
     'ebc': [{'ts': r.get('ts'), 'label': r.get('label'), 'text': r.get('text'),
              'codes': [{'code': c, 'name': ebc_code_names.get(c, ''),
                         'pct': ((r.get('quotes') or {}).get(c) or {}).get('change_pct')} for c in r.get('codes', [])]}
