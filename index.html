@@ -156,7 +156,7 @@ footer{margin-top:40px;color:var(--muted);font-size:.75rem;line-height:1.8}
   <section id="secSectors">
     <h2>族群溫度計 <span class="cnt" id="secCnt"></span></h2>
     <div class="legend">
-      <span><span class="dot hot"></span>亮燈＝當日 3 則以上新聞點名（噴出）</span>
+      <span><span class="dot hot"></span>亮燈＝3 天內 <span id="hotTh">?</span> 則以上新聞點名（噴出）</span>
       <span><span class="dot cross"></span>黃色＝與 EBC 參照源交叉重疊</span>
     </div>
     <div class="chips" id="sectorChips"></div>
@@ -211,6 +211,7 @@ const hotSet = new Set(DATA.sectors.filter(s=>s.hot).map(s=>s.name));
 const crossSet = new Set(DATA.sectors.filter(s=>s.cross).map(s=>s.name));
 
 $('#updated').textContent = '更新：' + DATA.generated_at;
+$('#hotTh').textContent = DATA.hot_threshold;
 
 /* ---- 主題 ---- */
 const root = document.documentElement;

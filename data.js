@@ -1,5 +1,5 @@
 const DATA = {
- "generated_at": "2026-07-06 21:56",
+ "generated_at": "2026-07-06 22:00",
  "quote_date": "前一交易日",
  "sectors": [
   {
@@ -22,7 +22,7 @@ const DATA = {
   },
   {
    "name": "證券",
-   "count": 33,
+   "count": 34,
    "hot": true,
    "cross": false
   },
@@ -83,307 +83,307 @@ const DATA = {
   {
    "name": "機器人",
    "count": 24,
-   "hot": true,
+   "hot": false,
    "cross": true
   },
   {
    "name": "晶圓代工",
    "count": 23,
-   "hot": true,
+   "hot": false,
    "cross": false
   },
   {
    "name": "電源",
    "count": 23,
-   "hot": true,
+   "hot": false,
    "cross": false
   },
   {
    "name": "HBM",
    "count": 23,
-   "hot": true,
+   "hot": false,
    "cross": true
   },
   {
    "name": "油價",
    "count": 22,
-   "hot": true,
+   "hot": false,
    "cross": false
   },
   {
    "name": "面板",
    "count": 22,
-   "hot": true,
+   "hot": false,
    "cross": false
   },
   {
    "name": "電池",
    "count": 22,
-   "hot": true,
+   "hot": false,
    "cross": true
   },
   {
    "name": "被動元件",
    "count": 22,
-   "hot": true,
+   "hot": false,
    "cross": true
   },
   {
    "name": "封測",
    "count": 21,
-   "hot": true,
+   "hot": false,
    "cross": true
   },
   {
    "name": "電動車",
    "count": 21,
-   "hot": true,
+   "hot": false,
    "cross": true
   },
   {
    "name": "生技",
    "count": 21,
-   "hot": true,
+   "hot": false,
    "cross": false
   },
   {
    "name": "綠能",
    "count": 21,
-   "hot": true,
+   "hot": false,
    "cross": false
   },
   {
    "name": "光通訊",
    "count": 21,
-   "hot": true,
+   "hot": false,
    "cross": true
   },
   {
    "name": "網通",
    "count": 21,
-   "hot": true,
+   "hot": false,
    "cross": true
   },
   {
    "name": "CPO",
    "count": 21,
-   "hot": true,
+   "hot": false,
    "cross": true
   },
   {
    "name": "遊戲",
    "count": 21,
-   "hot": true,
+   "hot": false,
    "cross": false
   },
   {
    "name": "低軌衛星",
    "count": 21,
-   "hot": true,
+   "hot": false,
    "cross": true
+  },
+  {
+   "name": "航空",
+   "count": 20,
+   "hot": false,
+   "cross": false
   },
   {
    "name": "散熱",
    "count": 20,
-   "hot": true,
+   "hot": false,
    "cross": false
   },
   {
    "name": "CCL",
    "count": 20,
-   "hot": true,
+   "hot": false,
    "cross": false
   },
   {
    "name": "航運",
    "count": 20,
-   "hot": true,
-   "cross": false
-  },
-  {
-   "name": "航空",
-   "count": 20,
-   "hot": true,
+   "hot": false,
    "cross": false
   },
   {
    "name": "原物料",
    "count": 20,
-   "hot": true,
+   "hot": false,
    "cross": false
   },
   {
    "name": "餐飲",
    "count": 20,
-   "hot": true,
+   "hot": false,
    "cross": false
   },
   {
    "name": "車用",
    "count": 20,
-   "hot": true,
+   "hot": false,
    "cross": false
   },
   {
    "name": "觀光",
    "count": 20,
-   "hot": true,
+   "hot": false,
    "cross": false
   },
   {
    "name": "軍工",
    "count": 18,
-   "hot": true,
+   "hot": false,
    "cross": false
   },
   {
    "name": "CoWoS",
    "count": 17,
-   "hot": true,
+   "hot": false,
    "cross": true
   },
   {
    "name": "儲能",
    "count": 16,
-   "hot": true,
+   "hot": false,
    "cross": false
   },
   {
    "name": "液冷",
    "count": 16,
-   "hot": true,
+   "hot": false,
    "cross": false
   },
   {
    "name": "太陽能",
    "count": 16,
-   "hot": true,
+   "hot": false,
    "cross": false
   },
   {
    "name": "IC設計",
    "count": 16,
-   "hot": true,
+   "hot": false,
    "cross": true
   },
   {
    "name": "航太",
    "count": 14,
-   "hot": true,
+   "hot": false,
    "cross": false
   },
   {
    "name": "矽光子",
    "count": 13,
-   "hot": true,
+   "hot": false,
    "cross": true
   },
   {
    "name": "內需",
    "count": 13,
-   "hot": true,
+   "hot": false,
    "cross": false
   },
   {
    "name": "營建",
    "count": 13,
-   "hot": true,
+   "hot": false,
    "cross": false
   },
   {
    "name": "高速傳輸",
    "count": 12,
-   "hot": true,
+   "hot": false,
    "cross": false
   },
   {
    "name": "紡織",
    "count": 11,
-   "hot": true,
+   "hot": false,
    "cross": false
   },
   {
    "name": "風電",
    "count": 10,
-   "hot": true,
+   "hot": false,
    "cross": false
   },
   {
    "name": "IP",
    "count": 10,
-   "hot": true,
+   "hot": false,
    "cross": false
   },
   {
    "name": "鋼鐵",
    "count": 10,
-   "hot": true,
+   "hot": false,
    "cross": false
   },
   {
    "name": "製藥",
    "count": 10,
-   "hot": true,
+   "hot": false,
    "cross": false
   },
   {
    "name": "造船",
    "count": 9,
-   "hot": true,
+   "hot": false,
    "cross": false
   },
   {
    "name": "銅箔基板",
    "count": 9,
-   "hot": true,
+   "hot": false,
    "cross": false
   },
   {
    "name": "塑化",
    "count": 8,
-   "hot": true,
+   "hot": false,
    "cross": false
   },
   {
    "name": "汽車零組件",
    "count": 8,
-   "hot": true,
+   "hot": false,
    "cross": false
   },
   {
    "name": "銅纜",
    "count": 7,
-   "hot": true,
+   "hot": false,
    "cross": false
   },
   {
    "name": "重電",
    "count": 7,
-   "hot": true,
+   "hot": false,
    "cross": false
   },
   {
    "name": "貨櫃",
    "count": 6,
-   "hot": true,
+   "hot": false,
    "cross": true
   },
   {
    "name": "醫材",
    "count": 5,
-   "hot": true,
+   "hot": false,
    "cross": false
   },
   {
    "name": "東協",
    "count": 4,
-   "hot": true,
+   "hot": false,
    "cross": false
   },
   {
    "name": "玻璃基板",
    "count": 4,
-   "hot": true,
+   "hot": false,
    "cross": false
   },
   {
@@ -585,6 +585,19 @@ const DATA = {
     "伺服器"
    ],
    "stocks": []
+  },
+  {
+   "title": "疑涉證交法遭搜索 長榮集團：營運一切正常",
+   "link": "https://tw.stock.yahoo.com/news/%E7%96%91%E6%B6%89%E8%AD%89%E4%BA%A4%E6%B3%95%E9%81%AD%E6%90%9C%E7%B4%A2-%E9%95%B7%E6%A6%AE%E9%9B%86%E5%9C%98-%E7%87%9F%E9%81%8B-%E5%88%87%E6%AD%A3%E5%B8%B8-124900828.html",
+   "pubDate": "Mon, 06 Jul 2026 12:49:00 GMT",
+   "desc": "...台北地檢署指揮調查局兵分多路搜索，全案朝違反證券交易法等方向偵辦。長榮則透過重訊表示，檢調單位至公司進行相關搜索，過程中全力配合檢調單位調查，目前公司一切營運正常，對財務及業務並無影響。 據悉，",
+   "sectors": [
+    "航空",
+    "證券"
+   ],
+   "stocks": [
+    "2603"
+   ]
   },
   {
    "title": "中小企業2026年平價綠電專案 7／7起開放登記",
@@ -2888,16 +2901,6 @@ const DATA = {
     "車用"
    ],
    "stocks": []
-  },
-  {
-   "title": "大鵬科7月下旬轉上市；新廠預計2029年完工",
-   "link": "https://tw.stock.yahoo.com/news/%E5%A4%A7%E9%B5%AC%E7%A7%917%E6%9C%88%E4%B8%8B%E6%97%AC%E8%BD%89%E4%B8%8A%E5%B8%82-%E6%96%B0%E5%BB%A0%E9%A0%90%E8%A8%882029%E5%B9%B4%E5%AE%8C%E5%B7%A5-075400482.html",
-   "pubDate": "Mon, 06 Jul 2026 07:54:00 GMT",
-   "desc": "MoneyDJ新聞 2026-07-06 15:54:10 黃立安 發佈大鵬科CLMX(7689)將於今(2026)年7月下旬轉上市，並擬於7月7日舉辦上市前業績發表會。公司上半年營收達29.57億元",
-   "sectors": [
-    "網通"
-   ],
-   "stocks": []
   }
  ],
  "ebc": [
@@ -3697,32 +3700,6 @@ const DATA = {
    "exempt": false
   },
   {
-   "code": "1617",
-   "name": "榮星",
-   "market": "上市",
-   "kinds": [
-    "注意",
-    "處置"
-   ],
-   "details": [
-    "注意 累計4次（07-06）",
-    "第一次處置 07-06~07-17"
-   ],
-   "close": 24.5,
-   "vol": 4480,
-   "hit": "新聞＋EBC",
-   "news": [
-    {
-     "title": "榮星漆包線接單回溫，新應用持續推進",
-     "link": "https://tw.stock.yahoo.com/news/%E6%A6%AE%E6%98%9F%E6%BC%86%E5%8C%85%E7%B7%9A%E6%8E%A5%E5%96%AE%E5%9B%9E%E6%BA%AB-%E6%96%B0%E6%87%89%E7%94%A8%E6%8C%81%E7%BA%8C%E6%8E%A8%E9%80%B2-015000688.html"
-    }
-   ],
-   "sectors": [
-    "原物料"
-   ],
-   "exempt": true
-  },
-  {
    "code": "2484",
    "name": "希華",
    "market": "上市",
@@ -4017,32 +3994,6 @@ const DATA = {
    "exempt": false
   },
   {
-   "code": "3363",
-   "name": "上詮",
-   "market": "上櫃",
-   "kinds": [
-    "注意"
-   ],
-   "details": [
-    "注意 累計30次（07-06）"
-   ],
-   "close": 574.0,
-   "vol": 5949,
-   "hit": "新聞",
-   "news": [
-    {
-     "title": "不甩「光通訊鬼故事」 全新、聯亞、光聖、波若威…誰EPS跳增3倍、毛利率衝6成？大咖法人讚AI純度極高",
-     "link": "https://tw.stock.yahoo.com/news/%E4%B8%8D%E7%94%A9-%E5%85%89%E9%80%9A%E8%A8%8A%E9%AC%BC%E6%95%85%E4%BA%8B-%E5%85%A8%E6%96%B0-%E8%81%AF%E4%BA%9E-%E5%85%89%E8%81%96-220030268.html"
-    }
-   ],
-   "sectors": [
-    "光通訊",
-    "矽光子",
-    "高速傳輸"
-   ],
-   "exempt": true
-  },
-  {
    "code": "4707",
    "name": "磐亞",
    "market": "上櫃",
@@ -4058,32 +4009,6 @@ const DATA = {
    "news": [],
    "sectors": [],
    "exempt": false
-  },
-  {
-   "code": "4991",
-   "name": "環宇-KY",
-   "market": "上櫃",
-   "kinds": [
-    "注意"
-   ],
-   "details": [
-    "注意 累計30次（07-06）"
-   ],
-   "close": 521.0,
-   "vol": 6379,
-   "hit": "新聞",
-   "news": [
-    {
-     "title": "不甩「光通訊鬼故事」 全新、聯亞、光聖、波若威…誰EPS跳增3倍、毛利率衝6成？大咖法人讚AI純度極高",
-     "link": "https://tw.stock.yahoo.com/news/%E4%B8%8D%E7%94%A9-%E5%85%89%E9%80%9A%E8%A8%8A%E9%AC%BC%E6%95%85%E4%BA%8B-%E5%85%A8%E6%96%B0-%E8%81%AF%E4%BA%9E-%E5%85%89%E8%81%96-220030268.html"
-    }
-   ],
-   "sectors": [
-    "光通訊",
-    "矽光子",
-    "高速傳輸"
-   ],
-   "exempt": true
   },
   {
    "code": "5371",
@@ -4382,36 +4307,6 @@ const DATA = {
    "exempt": true
   },
   {
-   "code": "8996",
-   "name": "高力",
-   "market": "上市",
-   "kinds": [
-    "處置"
-   ],
-   "details": [
-    "第一次處置 06-24~07-07"
-   ],
-   "close": 1380.0,
-   "vol": 1321,
-   "hit": "新聞",
-   "news": [
-    {
-     "title": "高力Q3營運回溫，下半年估優於上半年20%",
-     "link": "https://tw.stock.yahoo.com/news/%E9%AB%98%E5%8A%9Bq3%E7%87%9F%E9%81%8B%E5%9B%9E%E6%BA%AB-%E4%B8%8B%E5%8D%8A%E5%B9%B4%E4%BC%B0%E5%84%AA%E6%96%BC%E4%B8%8A%E5%8D%8A%E5%B9%B420-014200827.html"
-    },
-    {
-     "title": "第二季商用不動產市場展望登場 世邦魏理仕將公布年中關鍵報告",
-     "link": "https://tw.stock.yahoo.com/news/%E7%AC%AC%E4%BA%8C%E5%AD%A3%E5%95%86%E7%94%A8%E4%B8%8D%E5%8B%95%E7%94%A2%E5%B8%82%E5%A0%B4%E5%B1%95%E6%9C%9B%E7%99%BB%E5%A0%B4-%E4%B8%96%E9%82%A6%E9%AD%8F%E7%90%86%E4%BB%95%E5%B0%87%E5%85%AC%E5%B8%83%E5%B9%B4%E4%B8%AD%E9%97%9C%E9%8D%B5%E5%A0%B1%E5%91%8A-033002635.html"
-    }
-   ],
-   "sectors": [
-    "光通訊",
-    "散熱",
-    "液冷"
-   ],
-   "exempt": true
-  },
-  {
    "code": "5425",
    "name": "台半",
    "market": "上櫃",
@@ -4556,6 +4451,32 @@ const DATA = {
    "news": [],
    "sectors": [],
    "drop_reason": "未上族群新聞"
+  },
+  {
+   "code": "1617",
+   "name": "榮星",
+   "market": "上市",
+   "kinds": [
+    "注意",
+    "處置"
+   ],
+   "details": [
+    "注意 累計4次（07-06）",
+    "第一次處置 07-06~07-17"
+   ],
+   "close": 24.5,
+   "vol": 4480,
+   "hit": "新聞＋EBC",
+   "news": [
+    {
+     "title": "榮星漆包線接單回溫，新應用持續推進",
+     "link": "https://tw.stock.yahoo.com/news/%E6%A6%AE%E6%98%9F%E6%BC%86%E5%8C%85%E7%B7%9A%E6%8E%A5%E5%96%AE%E5%9B%9E%E6%BA%AB-%E6%96%B0%E6%87%89%E7%94%A8%E6%8C%81%E7%BA%8C%E6%8E%A8%E9%80%B2-015000688.html"
+    }
+   ],
+   "sectors": [
+    "原物料"
+   ],
+   "drop_reason": "量<1萬張 "
   },
   {
    "code": "1718",
@@ -4851,6 +4772,32 @@ const DATA = {
    "drop_reason": "未上族群新聞"
   },
   {
+   "code": "3363",
+   "name": "上詮",
+   "market": "上櫃",
+   "kinds": [
+    "注意"
+   ],
+   "details": [
+    "注意 累計30次（07-06）"
+   ],
+   "close": 574.0,
+   "vol": 5949,
+   "hit": "新聞",
+   "news": [
+    {
+     "title": "不甩「光通訊鬼故事」 全新、聯亞、光聖、波若威…誰EPS跳增3倍、毛利率衝6成？大咖法人讚AI純度極高",
+     "link": "https://tw.stock.yahoo.com/news/%E4%B8%8D%E7%94%A9-%E5%85%89%E9%80%9A%E8%A8%8A%E9%AC%BC%E6%95%85%E4%BA%8B-%E5%85%A8%E6%96%B0-%E8%81%AF%E4%BA%9E-%E5%85%89%E8%81%96-220030268.html"
+    }
+   ],
+   "sectors": [
+    "光通訊",
+    "矽光子",
+    "高速傳輸"
+   ],
+   "drop_reason": "量<1萬張 "
+  },
+  {
    "code": "3675",
    "name": "德微",
    "market": "上櫃",
@@ -4885,6 +4832,32 @@ const DATA = {
    "news": [],
    "sectors": [],
    "drop_reason": "未上族群新聞"
+  },
+  {
+   "code": "4991",
+   "name": "環宇-KY",
+   "market": "上櫃",
+   "kinds": [
+    "注意"
+   ],
+   "details": [
+    "注意 累計30次（07-06）"
+   ],
+   "close": 521.0,
+   "vol": 6379,
+   "hit": "新聞",
+   "news": [
+    {
+     "title": "不甩「光通訊鬼故事」 全新、聯亞、光聖、波若威…誰EPS跳增3倍、毛利率衝6成？大咖法人讚AI純度極高",
+     "link": "https://tw.stock.yahoo.com/news/%E4%B8%8D%E7%94%A9-%E5%85%89%E9%80%9A%E8%A8%8A%E9%AC%BC%E6%95%85%E4%BA%8B-%E5%85%A8%E6%96%B0-%E8%81%AF%E4%BA%9E-%E5%85%89%E8%81%96-220030268.html"
+    }
+   ],
+   "sectors": [
+    "光通訊",
+    "矽光子",
+    "高速傳輸"
+   ],
+   "drop_reason": "量<1萬張 "
   },
   {
    "code": "5536",
@@ -5501,6 +5474,36 @@ const DATA = {
    "drop_reason": "量<1萬張 "
   },
   {
+   "code": "8996",
+   "name": "高力",
+   "market": "上市",
+   "kinds": [
+    "處置"
+   ],
+   "details": [
+    "第一次處置 06-24~07-07"
+   ],
+   "close": 1380.0,
+   "vol": 1321,
+   "hit": "新聞",
+   "news": [
+    {
+     "title": "高力Q3營運回溫，下半年估優於上半年20%",
+     "link": "https://tw.stock.yahoo.com/news/%E9%AB%98%E5%8A%9Bq3%E7%87%9F%E9%81%8B%E5%9B%9E%E6%BA%AB-%E4%B8%8B%E5%8D%8A%E5%B9%B4%E4%BC%B0%E5%84%AA%E6%96%BC%E4%B8%8A%E5%8D%8A%E5%B9%B420-014200827.html"
+    },
+    {
+     "title": "第二季商用不動產市場展望登場 世邦魏理仕將公布年中關鍵報告",
+     "link": "https://tw.stock.yahoo.com/news/%E7%AC%AC%E4%BA%8C%E5%AD%A3%E5%95%86%E7%94%A8%E4%B8%8D%E5%8B%95%E7%94%A2%E5%B8%82%E5%A0%B4%E5%B1%95%E6%9C%9B%E7%99%BB%E5%A0%B4-%E4%B8%96%E9%82%A6%E9%AD%8F%E7%90%86%E4%BB%95%E5%B0%87%E5%85%AC%E5%B8%83%E5%B9%B4%E4%B8%AD%E9%97%9C%E9%8D%B5%E5%A0%B1%E5%91%8A-033002635.html"
+    }
+   ],
+   "sectors": [
+    "光通訊",
+    "散熱",
+    "液冷"
+   ],
+   "drop_reason": "量<1萬張 "
+  },
+  {
    "code": "911608",
    "name": "明輝-DR",
    "market": "上市",
@@ -5980,5 +5983,5 @@ const DATA = {
    "drop_reason": "未上族群新聞"
   }
  ],
- "hot_threshold": 3
+ "hot_threshold": 25
 };

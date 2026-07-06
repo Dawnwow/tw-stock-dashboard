@@ -168,7 +168,7 @@ for n in news:
 ebc_sectors = set(find_sectors(ebc_text_all))
 news_stock_codes = set(c for n in news for c in n['stocks'])
 
-HOT_TH = 3   # 出現 >=3 則新聞 = 亮燈（很紅）
+HOT_TH = 25  # 3 天內 >=25 則新聞 = 亮燈（很紅）；2026-07-07 鳳梨拍板，配逐關鍵字抓法的新聞量
 sectors_out = []
 for s, cnt in sorted(sector_count.items(), key=lambda x: -x[1]):
     sectors_out.append({'name': s, 'count': cnt, 'hot': cnt >= HOT_TH, 'cross': s in ebc_sectors})
