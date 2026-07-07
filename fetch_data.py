@@ -19,8 +19,9 @@ def roc_to_iso(s):
     if not m: return None
     return f"{int(m.group(1))+1911}-{int(m.group(2)):02d}-{int(m.group(3)):02d}"
 
-# ---------- 1. Yahoo RSS 族群新聞（逐關鍵字查詢，非單查「熱門族群」） ----------
-from concurrent.futures import ThreadPoolExecutor
+# ---------- 1. Google News RSS「熱門族群」新聞 ----------
+# 2026-07-06 Yahoo RSS 的 q= 搜尋參數失效（回空殼頻道），改抓 Google News RSS，
+# 只查「熱門族群」一個關鍵字（鳳梨拍板），主要命中富聯網（三竹）轉載的時報《熱門族群》系列。
 from urllib.parse import quote
 from email.utils import parsedate_to_datetime
 
@@ -29,14 +30,22 @@ SECTORS = ['軍工','無人機','矽光子','CPO','光通訊','記憶體','DRAM'
            '航運','貨櫃','散裝','航空','塑化','紡織','鋼鐵','水泥','生技','製藥','觀光','餐飲','營建','資產','金融','證券',
            '電動車','汽車零組件','太陽能','儲能','風電','電池','低軌衛星','蘋概','綠能','遊戲','銅纜','高速傳輸','車用',
            '矽智財','IP','先進封裝','CoWoS','ETF','東協','內需','醫材','隱形眼鏡','油價','原物料','航太','造船']
+# 註：SECTORS 已不拿去查詢，只用於第 5 節比對新聞內文貼族群標籤。
 
 def fetch_rss(kw):
     try:
-        raw = fetch('https://tw.stock.yahoo.com/rss?q=' + quote(kw))
+        url = ('https://news.google.com/rss/search?q=' + quote(f'"{kw}" when:3d') +
+               '&hl=zh-TW&gl=TW&ceid=TW:zh-Hant')
+        raw = fetch(url)
         items = []
         for item in ET.fromstring(raw).iter('item'):
+            title = (item.findtext('title') or '').strip()
+            source = (item.findtext('source') or '').strip()
+            # Google News 標題尾巴帶「 - 來源名」，去掉
+            if source and title.endswith(' - ' + source):
+                title = title[:-len(' - ' + source)].strip()
             items.append({
-                'title': (item.findtext('title') or '').strip(),
+                'title': title,
                 'link': (item.findtext('link') or '').strip(),
                 'pubDate': (item.findtext('pubDate') or '').strip(),
                 'desc': re.sub(r'<[^>]+>', '', item.findtext('description') or '').strip()[:200],
@@ -48,16 +57,8 @@ def fetch_rss(kw):
         return []
 
 news_by_link = {}
-with ThreadPoolExecutor(max_workers=8) as ex:
-    for items in ex.map(fetch_rss, ['熱門族群'] + SECTORS):
-        for it in items:
-            e = news_by_link.get(it['link'])
-            if e is None:
-                e = it
-                e['q_sectors'] = set()
-                news_by_link[it['link']] = e
-            if it['q'] in SECTORS:
-                e['q_sectors'].add(it['q'])
+for it in fetch_rss('熱門族群'):
+    news_by_link.setdefault(it['title'], it)  # 同稿多站轉載，用標題去重
 
 cutoff = NOW - timedelta(days=3)
 news = []
@@ -71,8 +72,9 @@ for e in news_by_link.values():
     if dt >= cutoff:
         e['_dt'] = dt
         news.append(e)
-news.sort(key=lambda x: x['_dt'], reverse=True)
-print('Yahoo RSS 新聞（去重、3 天內）:', len(news))
+# 《熱門族群》系列（時報稿）排最前，其餘照時間新→舊
+news.sort(key=lambda x: ('熱門族群》' not in x['title'], -x['_dt'].timestamp()))
+print('Google News RSS 熱門族群新聞（去重、3 天內）:', len(news))
 
 # ---------- 2. EBC 參照資料 ----------
 ebc = json.loads(fetch('https://pub-e13dde58e2134b369fa04c9c56ead9f5.r2.dev/data.json'))
@@ -160,7 +162,7 @@ def find_stocks(text):
 sector_count = {}
 for n in news:
     text = n['title'] + ' ' + n['desc']
-    n['sectors'] = sorted(set(find_sectors(text)) | n.pop('q_sectors', set()))
+    n['sectors'] = sorted(set(find_sectors(text)))
     n['stocks'] = find_stocks(text)
     for s in n['sectors']:
         sector_count[s] = sector_count.get(s, 0) + 1
